@@ -1,62 +1,33 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(MyApp());
-}
+void main() => runApp(const MyApp());
+
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.white,
-        body: Center(
-          child: MyHomePage(),
-        ),
-      ),
+      debugShowCheckedModeBanner: false,
+      title: 'Portail Ciel',
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: const SignInPage(),
     );
   }
 }
-class MyHomePage extends StatelessWidget {
+
+class SignInPage extends StatelessWidget {
+  const SignInPage({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(16.0),
-      child: Form(
-        key: _formKey,
+    return Scaffold(
+      body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            TextFormField(
-              decoration: const InputDecoration(
-                icon: const Icon(Icons.person),
-                hintText: 'Entrez votre identifiant',
-                labelText: 'Identifiant',
-              ),
-            ),
-            SizedBox(height: 10),
-            TextFormField(
-              decoration: const InputDecoration(
-                icon: const Icon(Icons.lock),
-                hintText: 'Entre votre mot de passe',
-                labelText: 'Mot de passe',
-              ),
-            ),
-            SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              child: ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => SecondPage()),
-                    );
-                  }
-                },
-                child: const Text('Envoyer'),
-              ),
-            ),
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _Logo(),
+            _FormContent(),
           ],
         ),
       ),
@@ -64,17 +35,128 @@ class MyHomePage extends StatelessWidget {
   }
 }
 
-class SecondPage extends StatelessWidget {
+class _Logo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Index'),
-      ),
-      body: Center(
-        child: Text('a'),
-      ),
+    final bool isSmallScreen = MediaQuery.of(context).size.width < 600;
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        FlutterLogo(size: isSmallScreen ? 100 : 200),
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Text(
+            "Portail Ciel",
+            textAlign: TextAlign.center,
+            style: isSmallScreen
+                ? Theme.of(context).textTheme.headlineSmall
+                : Theme.of(context).textTheme.headlineMedium?.copyWith(color: Colors.black),
+          ),
+        )
+      ],
     );
   }
 }
-final _formKey = GlobalKey<FormState>();
+
+class _FormContent extends StatefulWidget {
+  @override
+  State<_FormContent> createState() => __FormContentState();
+}
+
+class __FormContentState extends State<_FormContent> {
+  bool _isPasswordVisible = false;
+  bool _rememberMe = false;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      constraints: const BoxConstraints(maxWidth: 300),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextFormField(
+              validator: (value) => _validateField(value, 'Email'),
+              decoration: const InputDecoration(
+                labelText: 'Email',
+                hintText: 'Enter your email',
+                prefixIcon: Icon(Icons.email_outlined),
+                border: OutlineInputBorder(),
+              ),
+            ),
+            _gap(),
+            TextFormField(
+              validator: (value) => _validateField(value, 'Password'),
+              obscureText: !_isPasswordVisible,
+              decoration: InputDecoration(
+                labelText: 'Password',
+                hintText: 'Enter your password',
+                prefixIcon: const Icon(Icons.lock_outline_rounded),
+                border: const OutlineInputBorder(),
+                suffixIcon: IconButton(
+                  icon: Icon(_isPasswordVisible ? Icons.visibility_off : Icons.visibility),
+                  onPressed: () => setState(() => _isPasswordVisible = !_isPasswordVisible),
+                ),
+              ),
+            ),
+            _gap(),
+            CheckboxListTile(
+              value: _rememberMe,
+              onChanged: (value) => setState(() => _rememberMe = value ?? false),
+              title: const Text('Remember me'),
+              controlAffinity: ListTileControlAffinity.leading,
+              dense: true,
+              contentPadding: EdgeInsets.zero,
+            ),
+            _gap(),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                ),
+                onPressed: () => _handleSignIn(),
+                child: const Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: Text('Sign in', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)
+                  
+                  ),
+
+                  
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String? _validateField(String? value, String fieldName) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter some text';
+    }
+
+    if (fieldName == 'Email' && !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(value)) {
+      return 'Please enter a valid email';
+    }
+
+    if (fieldName == 'Password' && value.length < 6) {
+      return 'Password must be at least 6 characters';
+    }
+
+    return null;
+  }
+
+  Widget _gap() => const SizedBox(height: 16);
+
+  void _handleSignIn() {
+    if (_formKey.currentState?.validate() ?? false) {
+      // Faire quelque chose après la validation du formulaire
+    }
+  }
+}
