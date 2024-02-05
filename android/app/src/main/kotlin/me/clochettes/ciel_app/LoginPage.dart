@@ -1,3 +1,4 @@
+// ignore: file_names
 // LoginPage.dart
 import 'package:flutter/material.dart';
 
@@ -6,11 +7,13 @@ class LoginPage extends StatelessWidget {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
 
+  LoginPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Connexion'),
+        title: const Text('Connexion'),
       ),
       body: Form(
         key: _formKey,
@@ -18,7 +21,7 @@ class LoginPage extends StatelessWidget {
           children: <Widget>[
             TextFormField(
               controller: _usernameController,
-              decoration: InputDecoration(labelText: 'Identifiant'),
+              decoration: const InputDecoration(labelText: 'Identifiant'),
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Veuillez entrer votre identifiant';
@@ -28,7 +31,7 @@ class LoginPage extends StatelessWidget {
             ),
             TextFormField(
               controller: _passwordController,
-              decoration: InputDecoration(labelText: 'Mot de passe'),
+              decoration: const InputDecoration(labelText: 'Mot de passe'),
               obscureText: true,
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -41,11 +44,11 @@ class LoginPage extends StatelessWidget {
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Traitement des données')),
+                    const SnackBar(content: Text('Traitement des données')),
                   );
                 }
               },
-              child: Text('Soumettre'),
+              child: const Text('Soumettre'),
             ),
           ],
         ),
@@ -54,10 +57,12 @@ class LoginPage extends StatelessWidget {
   }
 }
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

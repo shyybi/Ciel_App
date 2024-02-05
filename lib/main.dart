@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
 void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
 }
 
 class SignInPage extends StatelessWidget {
-  const SignInPage({super.key});
+  const SignInPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +52,10 @@ class _Logo extends StatelessWidget {
             textAlign: TextAlign.center,
             style: isSmallScreen
                 ? Theme.of(context).textTheme.headlineSmall
-                : Theme.of(context).textTheme.headlineMedium?.copyWith(color: Colors.black),
+                : Theme.of(context)
+                    .textTheme
+                    .headlineMedium
+                    ?.copyWith(color: Colors.black),
           ),
         )
       ],
@@ -98,15 +102,19 @@ class __FormContentState extends State<_FormContent> {
                 prefixIcon: const Icon(Icons.lock_outline_rounded),
                 border: const OutlineInputBorder(),
                 suffixIcon: IconButton(
-                  icon: Icon(_isPasswordVisible ? Icons.visibility_off : Icons.visibility),
-                  onPressed: () => setState(() => _isPasswordVisible = !_isPasswordVisible),
+                  icon: Icon(_isPasswordVisible
+                      ? Icons.visibility_off
+                      : Icons.visibility),
+                  onPressed: () =>
+                      setState(() => _isPasswordVisible = !_isPasswordVisible),
                 ),
               ),
             ),
             _gap(),
             CheckboxListTile(
               value: _rememberMe,
-              onChanged: (value) => setState(() => _rememberMe = value ?? false),
+              onChanged: (value) =>
+                  setState(() => _rememberMe = value ?? false),
               title: const Text('Remember me'),
               controlAffinity: ListTileControlAffinity.leading,
               dense: true,
@@ -117,16 +125,15 @@ class __FormContentState extends State<_FormContent> {
               width: double.infinity,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4)),
                 ),
-                onPressed: () => _handleSignIn(),
+                onPressed: () => _handleSignIn(context),
                 child: const Padding(
                   padding: EdgeInsets.all(10.0),
-                  child: Text('Sign in', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)
-                  
-                  ),
-
-                  
+                  child: Text('Sign in',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 ),
               ),
             ),
@@ -141,7 +148,7 @@ class __FormContentState extends State<_FormContent> {
       return 'Please enter some text';
     }
 
-    if (fieldName == 'Email' && !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(value)) {
+    if (fieldName == 'Email' && value != 'Damas') {
       return 'Please enter a valid email';
     }
 
@@ -154,9 +161,127 @@ class __FormContentState extends State<_FormContent> {
 
   Widget _gap() => const SizedBox(height: 16);
 
-  void _handleSignIn() {
+  void _handleSignIn(BuildContext context) {
     if (_formKey.currentState?.validate() ?? false) {
-      // Faire quelque chose après la validation du formulaire
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const HomePage()),
+      );
     }
+  }
+}
+
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  String _searchText = "";
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.deepPurple,
+      appBar: AppBar(
+        title: const Text('Home Page'),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.deepPurple,
+              ),
+              child: Text(
+                'Menu',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            ListTile(
+              title: const Text('Accueil'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Favoris'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Paramètres'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SettingsPage()),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              onChanged: (value) {
+                setState(() {
+                  _searchText = value;
+                });
+              },
+              decoration: InputDecoration(
+                labelText: 'Rechercher...',
+                prefixIcon: const Icon(Icons.search),
+                filled: true,
+                fillColor: Colors.white,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: _buildDynamicContent(),
+          ),
+        ],
+      ),
+      bottomNavigationBar: CurvedNavigationBar(
+        backgroundColor: Colors.deepPurple,
+        animationDuration: const Duration(milliseconds: 300),
+        items: const [
+          Icon(Icons.home),
+          Icon(Icons.favorite),
+          Icon(Icons.settings),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDynamicContent() {
+    return Center(
+      child: Text(
+        'Contenu dynamique pour : $_searchText',
+        style: const TextStyle(color: Colors.white),
+      ),
+    );
+  }
+}
+
+class SettingsPage extends StatelessWidget {
+  const SettingsPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp();
   }
 }
