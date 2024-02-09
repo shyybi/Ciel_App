@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
+
+
 void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
@@ -148,11 +150,11 @@ class __FormContentState extends State<_FormContent> {
       return 'Please enter some text';
     }
 
-    if (fieldName == 'Email' && value != 'Damas') {
+    if (fieldName == 'Email' && value != 'JEAN') {
       return 'Please enter a valid email';
     }
 
-    if (fieldName == 'Password' && value.length < 6) {
+    if (fieldName == 'Password' && value != 'BROCHU') {
       return 'Password must be at least 6 characters';
     }
 
@@ -184,7 +186,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.deepPurple,
+      backgroundColor: const Color.fromARGB(184, 112, 8, 197),
       appBar: AppBar(
         title: const Text('Home Page'),
       ),
@@ -277,11 +279,17 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
+
 class SettingsPage extends StatelessWidget {
-  const SettingsPage({Key? key}) : super(key: key);
+  const SettingsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp();
+    return const Placeholder();
   }
 }
+
+
+
+
+
