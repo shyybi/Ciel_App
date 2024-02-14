@@ -150,11 +150,11 @@ class __FormContentState extends State<_FormContent> {
       return 'Please enter some text';
     }
 
-    if (fieldName == 'Email' && value != 'JEAN') {
+    if (fieldName == 'Email' && value != 'y') {
       return 'Please enter a valid email';
     }
 
-    if (fieldName == 'Password' && value != 'BROCHU') {
+    if (fieldName == 'Password' && value != 'y') {
       return 'Password must be at least 6 characters';
     }
 
@@ -186,7 +186,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(184, 112, 8, 197),
+      backgroundColor: const Color.fromARGB(255, 96, 96, 96),
       appBar: AppBar(
         title: const Text('Home Page'),
       ),
@@ -194,7 +194,7 @@ class _HomePageState extends State<HomePage> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            const DrawerHeader(
+            const DrawerHeader( 
               decoration: BoxDecoration(
                 color: Colors.deepPurple,
               ),
@@ -285,11 +285,10 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return const Scaffold(
+
+  
+    );
   }
 }
-
-
-
-
 
